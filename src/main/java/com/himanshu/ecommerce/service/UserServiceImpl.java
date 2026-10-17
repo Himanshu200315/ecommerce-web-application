@@ -33,8 +33,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(UserRegistrationDto userDto) {
+        String email = userDto.getEmail()
+                .trim()
+                .toLowerCase(java.util.Locale.ROOT);
 
-        if (userRepository.existsByEmailIgnoreCase(userDto.getEmail().trim())) {
+        if (userRepository.existsByEmailIgnoreCase(email)) {
             throw new EmailAlreadyExistsException("Email already registered");
         }
 
@@ -48,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(userDto.getUsername());
         user.setPhoneNumber(userDto.getPhoneNumber().trim());
-        user.setEmail(userDto.getEmail().trim());
+        user.setEmail(email);
 
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole(Role.USER);
